@@ -7,13 +7,6 @@
 				"enablePullDownRefresh": true
 			}
 		}
-	    ,{
-            "path" : "pages/index1/index1",
-            "style": {
-            	"navigationBarTitleText": "wsure-loadmore",
-            	"enablePullDownRefresh": true
-            }
-        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

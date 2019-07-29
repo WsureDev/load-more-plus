@@ -99,21 +99,24 @@
 					pageSize:this.pageSize
 				})
 			},
-			startLoading(){
+			reLoadData(){
 				if(this.state === 1)
 				{
 					return ;
 				}
 				this.state = 1;
-			},
-			reLoadData(){
-				this.startLoading()
+				
 				this.dataList = [],
 				this.pageNo = 1,
 				this.provideData();
 			},
 			reachBottom(){
-				this.startLoading()
+				if(this.state === 1)
+				{
+					return ;
+				}
+				this.state = 1;
+				
 				this.provideData()
 			},
 			pullDownRefresh(){

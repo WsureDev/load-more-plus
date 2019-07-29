@@ -38,7 +38,9 @@
 					
 					var res = that.getData(e);
 					
+					console.log("pushData!")
 					that.$refs.loadMore.pushData(res);
+					
 				}, 1000);
 			},
 			//为了演示功能编写的演示数据生成逻辑

@@ -72,7 +72,7 @@
 		},
 		methods: {
 			pushData(arr){
-				console.log("pushData!")
+				
 				if(arr && arr.length>=0){
 					this.state = 0;
 				}else{

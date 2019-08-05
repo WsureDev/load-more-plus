@@ -1,12 +1,19 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/index/index",
+			"path": "pages/index2/index2",
 			"style": {
 				"navigationBarTitleText": "wsure-loadmore",
 				"enablePullDownRefresh": true
 			}
 		}
+        ,{
+            "path" : "pages/index/index",
+            "style": {
+            	"navigationBarTitleText": "wsure-loadmore",
+            	"enablePullDownRefresh": true
+            }
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

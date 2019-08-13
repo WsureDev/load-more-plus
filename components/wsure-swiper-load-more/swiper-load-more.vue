@@ -32,19 +32,7 @@
 			tabBars:{
 				type:Array,
 				default:function(){
-					return [{
-						name: '关注',
-						id: 'guanzhu'
-					}, {
-						name: '推荐',
-						id: 'tuijian'
-					}, {
-						name: '体育',
-						id: 'tiyu'
-					}, {
-						name: '热点',
-						id: 'redian'
-					}]
+					return []
 				}
 			}
 		},
@@ -56,7 +44,6 @@
 				scrollLeft: 0,
 				isClickChange: false,
 				tabIndex: 0,
-				dataitems: [],
 			};
 		},
 		methods:{

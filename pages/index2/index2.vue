@@ -1,45 +1,62 @@
 <template>
 	<view style="flex: 1;height: 100%;">
-		<ws-slm ref="slm" @providers="providers" style="height: 100%;" class="swiper-box">
-			<template v-slot:list_guanzhu="{ items }" class="swiper-box"> <!-- 此处为插槽，只能使用template或其他自定义component -->
-			<!-- <scroll-view class="list" scroll-y @scrolltolower="loadMore"> -->
+		<ws-slm ref="slm" @providers="providers" style="height: 100%;" class="swiper-box" :tabBars="tabBar">
+			<!-- 统一处理，直接循环 -->
+			<block v-for="(slotItem,slotIndex) in tabBar" :key="slotIndex">
+				<template v-slot:[slotItem.id]="{ items }" class="swiper-box"> <!-- 此处为插槽，只能使用template或其他自定义component -->
+					<view class="solid-top" v-for="(item,index) in items" :key="index">
+						<view class="item"> {{item.name}} </view>
+					</view>
+				</template>
+			</block>
+			
+			
+			<!-- 个性处理，单独使用slot名称区别对待 -->
+			<!-- <template v-slot:tuijian="{ items }"> 
 				<view class="solid-top" v-for="(item,index) in items" :key="index">
-					<view class="item"> {{item.name}} </view>
-				</view>
-			<!-- </scroll-view> -->
-			</template>
-			<template v-slot:list_tuijian="{ items }"> <!-- 此处为插槽，只能使用template或其他自定义component -->
-				<view class="solid-top" v-for="(item,index) in items" :key="index">
-					<view class="item"> {{item.name}} </view>
-				</view>
-			</template>
-			<template v-slot:list_tiyu="{ items }"> <!-- 此处为插槽，只能使用template或其他自定义component -->
-				<view class="solid-top" v-for="(item,index) in items" :key="index">
-					<view class="item"> {{item.name}} </view>
-				</view>
-			</template>
-			<template v-slot:list_redian="{ items }"> <!-- 此处为插槽，只能使用template或其他自定义component -->
-				<view class="solid-top" v-for="(item,index) in items" :key="index">
-					<view class="item"> {{item.name}} </view>
+					<view class="item"> {{item.name}} ———A</view>
 				</view>
 			</template>
+			<template v-slot:tiyu="{ items }"> 
+				<view class="solid-top" v-for="(item,index) in items" :key="index">
+					<view class="item"> {{item.name}} ———B</view>
+				</view>
+			</template>
+			<template v-slot:redian="{ items }"> 
+				<view class="solid-top" v-for="(item,index) in items" :key="index">
+					<view class="item"> {{item.name}} ———C</view>
+				</view>
+			</template> -->
 		</ws-slm>
 	</view>
 </template>
 
 <script>
-	import wsSlm from '../../components/wsure-swiper-load-more/swiper-load-more.vue'
+	import wsSlm from '@/components/wsure-swiper-load-more/tabbar.nvue'
 	export default {
 		components:{
 			wsSlm
 		},
 		data() {
 			return {
-				
+				tabBar:[{
+						name: '关注',
+						id: 'guanzhu'
+					}, {
+						name: '推荐',
+						id: 'tuijian'
+					}, {
+						name: '体育',
+						id: 'tiyu'
+					}, {
+						name: '热点',
+						id: 'redian'
+					}]
 			}
 		},
 		methods: {
 			providers(e){
+				//e包含4个参数:pageNo、pageSize、index、tabId
 				console.log(e);
 				var that = this;
 				//模拟网络请求的延迟

@@ -1,0 +1,194 @@
+<template>
+    <view class="tabs">
+        <scroll-view id="tab-bar" class="scroll-h" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="scrollInto">
+            <view v-for="(tab,index) in tabBars" :key="tab.id" class="uni-tab-item" :style="'width:'+(750/tabSize)+'upx;'" :id="tab.id" :data-current="index" @click="ontabtap">
+                <text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.name}}</text>
+            </view>
+        </scroll-view>
+        <view class="line-h"></view>
+        <swiper :current="tabIndex" class="swiper-box" :duration="300" @change="ontabchange">
+            <swiper-item v-for="(tab,index1) in tabBars" :key="index1">
+                
+                    <ws-load-more class="list" :ref="'loadMore_'+index1" :pageSize="pageSize" @provider="provider">
+                    	<template v-slot:list="{ items }"> <!-- 此处为插槽，只能使用template或其他自定义component -->
+                    		<scroll-view class="list" scroll-y @scrolltolower="loadMore()">
+								<slot :name="tabBars[index1].id" :items="items"></slot>
+                    		</scroll-view>
+                    	</template>
+                    </ws-load-more>
+               
+            </swiper-item>
+        </swiper>
+    </view>
+</template>
+<script>
+    import wsLoadMore from '../wsure-load-more/load-more.vue';
+
+    export default {
+		props:{
+			tabSize:{
+				type:Number,
+				default:3
+			},
+			pageSize:{
+				type:Number,
+				default:10
+			},
+			tabBars:{
+				type:Array,
+				default:function(){
+					return []
+				}
+			}
+		},
+        components: {
+            wsLoadMore
+        },
+        data() {
+            return {
+                tabIndex: 0,
+                scrollInto: "",
+            }
+        },
+        mounted() {
+            this.reLoadData()
+        },
+        methods: {
+            provider(e){
+            	e.index = this.tabIndex;
+            	e.tabId = this.tabBars[this.tabIndex].id;
+            	this.$emit('providers',e)
+            },
+			pushData(arr,index){
+				this.$refs['loadMore_'+index][0].pushData(arr);
+			},
+            loadMore(){
+            	this.$refs['loadMore_'+this.tabIndex][0].reachBottom();
+            },
+			reLoadData(){
+				console.log(this.$refs['loadMore_'+this.tabIndex])
+				this.$refs['loadMore_'+this.tabIndex][0].pullDownRefresh()
+			},
+			init(){
+				this.tabIndex = 0;
+				this.reLoadData()
+			},
+            ontabtap(e) {
+                let index = e.target.dataset.current || e.currentTarget.dataset.current;
+                this.switchTab(index);
+            },
+            ontabchange(e) {
+                let index = e.target.current || e.detail.current;
+                this.switchTab(index);
+            },
+            switchTab(index) {
+
+                if (this.tabIndex === index) {
+                    return;
+                }
+                this.tabIndex = index;
+                this.scrollInto = this.tabBars[index].id;
+				if(this.$refs['loadMore_'+index][0].dataList.length ==0 &&this.$refs['loadMore_'+index][0].lastPage.length ==0)
+				{
+					this.$refs['loadMore_'+index][0].reLoadData()
+				}
+            }
+        }
+    }
+</script>
+
+<style>
+	
+    page {
+        width: 100%;
+        min-height: 100%;
+        display: flex;
+    }
+
+    .tabs {
+        flex: 1;
+        flex-direction: column;
+        overflow: hidden;
+        background-color: #ffffff;
+        /* #ifdef MP-ALIPAY || MP-BAIDU */
+        height: 100vh;
+        /* #endif */
+    }
+
+    .scroll-h {
+        width: 750upx;
+        height: 80upx;
+        flex-direction: row;
+        /* #ifndef APP-PLUS */
+        white-space: nowrap;
+        /* #endif */
+        /* flex-wrap: nowrap; */
+        /* border-color: #cccccc;
+		border-bottom-style: solid;
+		border-bottom-width: 1px; */
+    }
+
+    .uni-tab-item {
+        /* #ifndef APP-PLUS */
+        display: inline-block;
+        /* #endif */
+        flex-wrap: nowrap;
+        /* padding-left: 34upx;
+        padding-right: 34upx; */
+		overflow: hidden;
+		text-align: center;
+    }
+
+    .uni-tab-item-title {
+        color: #555;
+        font-size: 30upx;
+        height: 80upx;
+        line-height: 80upx;
+        flex-wrap: nowrap;
+        /* #ifndef APP-PLUS */
+        white-space: nowrap;
+        /* #endif */
+    }
+
+    .uni-tab-item-title-active {
+        color: #007AFF;
+    }
+
+    .swiper-box {
+		display: flex;
+        flex: 1;
+		width: 100%;
+		height: calc(100% - 100upx);
+    }
+
+    .swiper-item {
+        flex: 1;
+    }
+
+    .scroll-v {
+        flex: 1;
+        /* #ifndef MP-ALIPAY */
+        flex-direction: column;
+        /* #endif */
+        width: 750upx;
+    }
+
+    .refresh-icon-active {
+        transform: rotate(180deg);
+    }
+
+    .loading-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 5px;
+    }
+
+    .loading-icon-active {
+        transform: rotate(21600deg);
+    }
+	
+	.list {
+		width: 750upx;
+		height: 100%;
+	}
+</style>
